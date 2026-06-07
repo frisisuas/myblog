@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight } from "lucide-react";
+import { imageUrl } from "@/lib/utils";
 
 const PROJECTS = [
   {
@@ -91,8 +92,8 @@ export function Projects() {
               data-testid={`card-project-${project.id}`}
             >
               <div className="relative overflow-hidden rounded-xl bg-card border border-border aspect-[4/3] mb-6">
-                <img 
-                  src={project.image} 
+                <img
+                  src={imageUrl(project.image)}
                   alt={project.title}
                   className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
                 />
@@ -154,7 +155,7 @@ export function Projects() {
                   </div>
                   
                   <div className="rounded-2xl overflow-hidden border border-border mb-16 shadow-lg">
-                    <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-auto" />
+                    <img src={imageUrl(selectedProject.image)} alt={selectedProject.title} className="w-full h-auto" />
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-12">

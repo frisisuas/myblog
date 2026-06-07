@@ -457,7 +457,7 @@ export function ExpandableCard({ item, isExpanded, onToggle }) {
         caption: "Fig. 4 — Version 2. The demo mode lets users experience the product before committing. Bank connection moved to step 3.",
         callouts: [
           { x: 15, y: 28, label: "The demo banner is always visible — users know they're in a safe, consequence-free environment. This reduces anxiety significantly" },
-          { x: 50, y: 42, label: "'Safe to Spend' is the hero metric — users immediately understand the core value proposition before any data is required" },
+          { x: 50, y: 42, label: " 'Safe to Spend' is the hero metric — users immediately understand the core value proposition before any data is required" },
           { x: 82, y: 65, label: "The 'Connect your bank' CTA only appears after the user has spent meaningful time in the demo. They're asking to connect, not being asked" },
         ],
       },
