@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { imageUrl } from "@/lib/utils";
 
 interface Callout {
   x: number;
@@ -42,7 +43,7 @@ export function AnnotatedImage({ src, alt, caption, callouts }: AnnotatedImagePr
         {/* Image with callout markers */}
         <div className="relative overflow-hidden" style={{ background: "hsl(240 10% 7%)" }}>
           <img
-            src={src}
+            src={imageUrl(src)}
             alt={alt}
             className="w-full object-cover block"
             style={{ maxHeight: "480px", objectPosition: "top" }}

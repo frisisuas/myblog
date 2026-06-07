@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Clock } from "lucide-react";
 import { Link } from "wouter";
 import type { BlogPost } from "@/data/blog-posts";
+import { imageUrl } from "@/lib/utils";
 
 interface BlogCardProps {
   post: BlogPost;
@@ -22,7 +23,7 @@ export function BlogCard({ post, index }: BlogCardProps) {
           {/* Cover image */}
           <div className="relative overflow-hidden h-52">
             <img
-              src={post.coverImage}
+              src={imageUrl(post.coverImage)}
               alt={post.title}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />

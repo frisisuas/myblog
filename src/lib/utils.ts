@@ -4,3 +4,8 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+export function imageUrl(path: string) {
+  const base = import.meta.env.BASE_URL.replace(/\/+$/, "")
+  return `${base}${path.startsWith("/") ? path : `/${path}`}`
+}

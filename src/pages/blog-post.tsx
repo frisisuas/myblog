@@ -5,6 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { Contact } from "@/components/contact";
 import { CodeBlock } from "@/components/blog/CodeBlock";
 import { AnnotatedImage } from "@/components/blog/AnnotatedImage";
+import { imageUrl } from "@/lib/utils";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { getBlogPost, BLOG_POSTS } from "@/data/blog-posts";
 import type { ContentBlock } from "@/data/blog-posts";
@@ -45,7 +46,7 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
     case "annotated-image":
       return (
         <AnnotatedImage
-          src={block.src}
+          src={imageUrl(block.src)}
           alt={block.alt}
           caption={block.caption}
           callouts={block.callouts}
@@ -157,7 +158,7 @@ export default function BlogPost() {
         >
           <div className="rounded-2xl overflow-hidden border border-white/8 shadow-2xl shadow-black/60">
             <img
-              src={post.coverImage}
+              src={imageUrl(post.coverImage)}
               alt={post.title}
               className="w-full object-cover"
               style={{ maxHeight: "520px", objectPosition: "top" }}
