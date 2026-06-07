@@ -1,78 +1,103 @@
 import { useRoute, Link } from "wouter";
 import { motion } from "framer-motion";
 import { ArrowLeft, Clock } from "lucide-react";
-import { Navbar } from "@/components/navbar";
+import ReactMarkdown from "react-markdown";
 import { Contact } from "@/components/contact";
 import { CodeBlock } from "@/components/blog/CodeBlock";
-import { AnnotatedImage } from "@/components/blog/AnnotatedImage";
 import { imageUrl } from "@/lib/utils";
 import { BlogCard } from "@/components/blog/BlogCard";
-import { getBlogPost, BLOG_POSTS } from "@/data/blog-posts";
-import type { ContentBlock } from "@/data/blog-posts";
+import { getBlogPost, BLOG_POSTS } from "@/data/posts";
 import NotFound from "@/pages/not-found";
+import type { Components } from "react-markdown";
 
-function BlockRenderer({ block }: { block: ContentBlock }) {
-  switch (block.type) {
-    case "paragraph":
-      return (
-        <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-          {block.text}
-        </p>
-      );
+function MarkdownContent({ content }: { content: string }) {
+  const components: Components = {
+    // Code blocks — fenced ```lang:filename
+    code({ className, children, ...props }) {
+      const match = /^language-(\w+)(?::(.+))?$/.exec(className || "");
+      const code = String(children).trim();
 
-    case "heading":
-      if (block.level === 3) {
-        return (
-          <h3 className="font-display font-bold text-xl mt-10 mb-4 text-foreground">
-            {block.text}
-          </h3>
-        );
+      if (match) {
+        const lang = match[1];
+        const filename = match[2] || undefined;
+        return <CodeBlock code={code} language={lang} filename={filename} />;
       }
-      return (
-        <h2 className="font-display font-bold text-2xl md:text-3xl mt-14 mb-5 text-foreground">
-          {block.text}
-        </h2>
-      );
 
-    case "code":
+      // Inline code
       return (
-        <CodeBlock
-          code={block.code}
-          language={block.language}
-          filename={block.filename}
-        />
+        <code
+          className="px-1.5 py-0.5 rounded-md text-sm font-mono bg-white/8 text-primary"
+          {...props}
+        >
+          {children}
+        </code>
       );
+    },
 
-    case "annotated-image":
+    // Images — prepend base URL
+    img({ src, alt, title }) {
       return (
-        <AnnotatedImage
-          src={imageUrl(block.src)}
-          alt={block.alt}
-          caption={block.caption}
-          callouts={block.callouts}
-        />
-      );
-
-    case "quote":
-      return (
-        <blockquote className="my-10 pl-6 border-l-2 border-primary">
-          <p className="text-xl font-display font-medium italic text-foreground leading-relaxed mb-3">
-            "{block.text}"
-          </p>
-          {block.author && (
-            <cite className="text-sm text-muted-foreground not-italic font-mono">
-              — {block.author}
-            </cite>
+        <figure className="my-8 not-prose">
+          <div className="rounded-xl overflow-hidden border border-white/10 shadow-xl shadow-black/50">
+            <img
+              src={imageUrl(src ?? "")}
+              alt={alt ?? ""}
+              className="w-full object-cover"
+              style={{ maxHeight: "480px", objectPosition: "top" }}
+            />
+          </div>
+          {title && (
+            <figcaption className="text-center text-sm text-muted-foreground mt-3 font-mono tracking-wide">
+              {title}
+            </figcaption>
           )}
+        </figure>
+      );
+    },
+
+    // Blockquotes with optional author (last line starting with —)
+    blockquote({ children }) {
+      return (
+        <blockquote className="my-10 pl-6 border-l-2 border-primary text-xl font-display font-medium italic text-foreground leading-relaxed">
+          {children}
         </blockquote>
       );
+    },
 
-    case "divider":
+    // Headings
+    h2({ children }) {
+      return (
+        <h2 className="font-display font-bold text-2xl md:text-3xl mt-14 mb-5 text-foreground">
+          {children}
+        </h2>
+      );
+    },
+    h3({ children }) {
+      return (
+        <h3 className="font-display font-bold text-xl mt-10 mb-4 text-foreground">
+          {children}
+        </h3>
+      );
+    },
+
+    // Paragraphs
+    p({ children }) {
+      return (
+        <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+          {children}
+        </p>
+      );
+    },
+
+    // Horizontal rule
+    hr() {
       return <hr className="border-border my-12" />;
+    },
+  };
 
-    default:
-      return null;
-  }
+  return (
+    <ReactMarkdown components={components}>{content}</ReactMarkdown>
+  );
 }
 
 export default function BlogPost() {
@@ -86,8 +111,6 @@ export default function BlogPost() {
 
   return (
     <div className="bg-background min-h-screen text-foreground selection:bg-primary selection:text-white">
-      <Navbar />
-
       <main>
         {/* Back button + meta */}
         <section className="pt-36 pb-12 px-6 md:px-12">
@@ -173,9 +196,7 @@ export default function BlogPost() {
           transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
           className="container mx-auto max-w-3xl px-6 md:px-12 pb-24"
         >
-          {post.content.map((block, i) => (
-            <BlockRenderer key={i} block={block} />
-          ))}
+          <MarkdownContent content={post.content} />
         </motion.article>
 
         {/* Related articles */}

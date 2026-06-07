@@ -1,7 +1,10 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { useState, useCallback } from "react";
+import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Navbar } from "@/components/navbar";
+import { SearchModal } from "@/components/SearchModal";
 import NotFound from "@/pages/not-found";
 import Portfolio from "@/pages/portfolio";
 import Blog from "@/pages/blog";
@@ -20,14 +23,38 @@ function Router() {
   );
 }
 
+function AppContent() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [, setLocation] = useLocation();
+
+  const handleSearchNavigate = useCallback(
+    (path: string) => {
+      setLocation(path);
+    },
+    [setLocation]
+  );
+
+  return (
+    <>
+      <Navbar onSearchOpen={() => setIsSearchOpen(true)} />
+      <Router />
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        onNavigate={handleSearchNavigate}
+      />
+      <Toaster />
+    </>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
+          <AppContent />
         </WouterRouter>
-        <Toaster />
       </TooltipProvider>
     </QueryClientProvider>
   );

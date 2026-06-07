@@ -1,13 +1,11 @@
 import { motion } from "framer-motion";
-import { Navbar } from "@/components/navbar";
 import { Contact } from "@/components/contact";
 import { BlogCard } from "@/components/blog/BlogCard";
-import { BLOG_POSTS } from "@/data/blog-posts";
+import { BLOG_POSTS } from "@/data/posts";
 
 export default function Blog() {
   return (
     <div className="bg-background min-h-screen text-foreground selection:bg-primary selection:text-white">
-      <Navbar />
       <main>
         {/* Header */}
         <section className="pt-40 pb-20 px-6 md:px-12">
